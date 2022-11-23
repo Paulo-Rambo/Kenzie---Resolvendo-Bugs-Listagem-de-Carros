@@ -1,28 +1,30 @@
 import express from "express";
-import { uuidv4 } from "uuid";
+import { v4 as uuidv4 } from "uuid";
 
 const app = express();
 app.use(express.json());
 
-const cars = {};
+const cars = [];
 
-app.post("localhost:3000/cars", (request, response) => {
+app.post("/cars", (request, response) => {
   const { model, brand, year, color, plate } = request.body;
 
-  cars.push({
+  const newCar = {
     model,
     brand,
     year,
     color,
     plate,
     id: uuidv4(),
-  });
+  };
 
-  return response.status(201);
+  cars.push(newCar);
+
+  return response.status(201).json(newCar);
 });
 
-app.get("localhost:3000/", (response) => {
-  response.sendStatus("Kenzie Cars");
+app.get("/cars", (request, response) => {
+  return response.send(cars);
 });
 
-app.listen("localhost:3000");
+app.listen("3000");
